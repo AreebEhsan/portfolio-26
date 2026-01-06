@@ -9,7 +9,7 @@ import { ProjectsSection } from "@/components/sections/Projects";
 import { fetchGitHubRepos } from "@/lib/github";
 import { mergeFeaturedProjects } from "@/lib/projects";
 
-export const revalidate = 60 * 60 * 6; // 6 hours
+export const revalidate = 21600; // 6 hours
 
 export default async function HomePage() {
   const repos = await fetchGitHubRepos();

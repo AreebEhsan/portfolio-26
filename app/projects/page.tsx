@@ -2,7 +2,7 @@ import { ProjectsLibrary } from "@/components/projects/ProjectsLibrary";
 import { fetchGitHubRepos } from "@/lib/github";
 import { buildProjectLibrary } from "@/lib/projects";
 
-export const revalidate = 60 * 60 * 6; // 6 hours
+export const revalidate = 21600; // 6 hours
 
 export default async function ProjectsPage() {
   const repos = await fetchGitHubRepos();

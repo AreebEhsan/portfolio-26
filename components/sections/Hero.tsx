@@ -6,17 +6,6 @@ import { profile } from "@/content/profile";
 import { fadeInUp, staggerContainer } from "@/components/motion/variants";
 import { ArrowDownRight, FileDown } from "lucide-react";
 import Link from "next/link";
-import dynamic from "next/dynamic";
-
-const HeroScene = dynamic(
-  () => import("@/components/three/HeroScene").then((m) => m.HeroScene),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="relative h-[260px] w-full md:h-[340px]" />
-    ),
-  },
-);
 
 const ROTATION_INTERVAL = 2600;
 
@@ -111,7 +100,14 @@ export function Hero() {
           transition={{ duration: 0.7, ease: [0.19, 0.7, 0.3, 1] }}
           className="relative"
         >
-          <HeroScene />
+          <div className="relative h-[260px] w-full overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-cyan-500/20 via-sky-500/10 to-indigo-500/20 shadow-[0_0_50px_rgba(56,189,248,0.35)] md:h-[340px]">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(34,211,238,0.35),_transparent_55%),radial-gradient(circle_at_bottom,_rgba(129,140,248,0.3),_transparent_55%)]" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <p className="px-6 text-center text-xs font-medium uppercase tracking-[0.25em] text-cyan-100/70">
+                Building for the web, one pixel at a time
+              </p>
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>
