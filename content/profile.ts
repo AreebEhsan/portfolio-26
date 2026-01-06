@@ -27,7 +27,7 @@ export const profile: Profile = {
   quickFacts: [
     { label: "Education", value: "B.S. Computer Science, Georgia State University" },
     { label: "Graduation", value: "May 2026" },
-    { label: "GPA", value: "3.9 / 4.0" },
+    { label: "GPA", value: "3.93" },
     { label: "Interests", value: "Applied AI, security, research, developer experience" },
   ],
   now: "Designing robust RAG/LLM systems, exploring agentic workflows, and sharpening full-stack fundamentals.",
@@ -42,7 +42,7 @@ export const profile: Profile = {
     {
       type: "linkedin",
       label: "LinkedIn",
-      href: "https://www.linkedin.com/in/your-handle", // TODO: update LinkedIn URL
+      href: "https://www.linkedin.com/in/areebehsan/?profileId=ACoAAD-0wQsBapt-cG4P5y1_1BU0B9RSm8nEqjM",
     },
     {
       type: "email",

@@ -4,9 +4,10 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { MergedProject } from "@/lib/projects";
 import { fadeInUp, staggerContainer } from "@/components/motion/variants";
-import { Github, ExternalLink, Star, GitFork, X } from "lucide-react";
+import { Github, ExternalLink, Star, GitFork, X, ArrowRight } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
 import Image from "next/image";
+import Link from "next/link";
 
 export type ProjectsSectionProps = {
   projects: MergedProject[];
@@ -24,14 +25,31 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
         viewport={{ once: true, amount: 0.25 }}
         className="space-y-8"
       >
-        <motion.div variants={fadeInUp} className="space-y-3">
-          <p className="heading-subtle">Featured Projects</p>
-          <h2 className="heading-main">Applied AI, full stack, and research tooling.</h2>
-          <p className="max-w-xl text-sm leading-6 text-zinc-400">
-            Pulled live from GitHub, then curated so the top projects reflect
-            what I&apos;m actually proud of—especially AI systems, RAG pipelines,
-            and research tools.
-          </p>
+        <motion.div
+          variants={fadeInUp}
+          className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
+        >
+          <div className="space-y-3">
+            <p className="heading-subtle">Featured Projects</p>
+            <h2 className="heading-main">Applied AI, full stack, and research tooling.</h2>
+            <p className="max-w-xl text-sm leading-6 text-zinc-400">
+              Pulled live from GitHub, then curated so the top projects reflect
+              what I&apos;m actually proud of—especially AI systems, RAG pipelines,
+              and research tools.
+            </p>
+          </div>
+          <Link
+            href="/projects"
+            className="focus-ring group inline-flex flex-col items-start rounded-2xl border border-cyan-400/40 bg-cyan-500/10 px-4 py-3 text-xs text-cyan-100 shadow-[0_18px_45px_rgba(8,47,73,0.6)] transition hover:bg-cyan-500/15 hover:shadow-[0_22px_55px_rgba(8,47,73,0.9)]"
+          >
+            <span className="inline-flex items-center gap-2 text-sm font-medium">
+              Enter Project Library
+              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+            </span>
+            <span className="mt-0.5 text-[0.7rem] text-cyan-200/80">
+              Browse all projects
+            </span>
+          </Link>
         </motion.div>
 
         <motion.div

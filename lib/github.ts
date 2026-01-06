@@ -10,6 +10,7 @@ export type GitHubRepo = {
   topics?: string[];
   homepage?: string | null;
   pushed_at: string;
+  archived: boolean;
 };
 
 export type NormalizedProject = {
@@ -24,6 +25,7 @@ export type NormalizedProject = {
   language?: string;
   topics: string[];
   lastPushedAt: string;
+  archived: boolean;
 };
 
 const GITHUB_USER = "AreebEhsan";
@@ -65,6 +67,7 @@ export async function fetchGitHubRepos(): Promise<NormalizedProject[]> {
     language: repo.language ?? undefined,
     topics: repo.topics ?? [],
     lastPushedAt: repo.pushed_at,
+    archived: repo.archived,
   }));
 }
 

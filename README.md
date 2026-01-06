@@ -102,6 +102,18 @@ The app:
 
 If you rename a repo or add new ones, just update the `repo` field here.
 
+### 4b. Project library overrides — `content/projectsOverrides.ts`
+
+The `/projects` library page shows **all** public GitHub repos, but you can still curate how they appear:
+
+- `repo`: GitHub repo in `"owner/name"` format.
+- `slug`: Optional stable slug used for motion layout IDs and future deep links.
+- `featured`: Marks the project as curated; used by the default sort on the library page.
+- `priority`: Lower numbers appear earlier among featured projects.
+- `title`, `summary`: Optional text that overrides the GitHub name/description in the library UI.
+- `tags`: Extra tags added on top of GitHub topics/language.
+- `hide`: If `true`, hides the repo from the public library without touching GitHub.
+
 ### 5. Experience & education — `content/experience.ts`
 
 - `timeline`: Controls the vertical timeline in the Experience section.

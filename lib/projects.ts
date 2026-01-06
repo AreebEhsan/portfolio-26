@@ -1,4 +1,5 @@
 import { featuredProjectOverrides } from "@/content/featuredProjects";
+import { projectOverrides } from "@/content/projectsOverrides";
 import type { NormalizedProject } from "@/lib/github";
 
 export type MergedProject = {
@@ -82,4 +83,45 @@ export function mergeFeaturedProjects(
   }
 
   return merged.slice(0, limit);
+}
+
+export type LibraryProject = NormalizedProject & {
+  slug: string;
+  featured?: boolean;
+  priority?: number;
+  hidden?: boolean;
+  tags: string[];
+  summary?: string;
+};
+
+export function buildProjectLibrary(projects: NormalizedProject[]): LibraryProject[] {
+  const overridesByRepo = new Map(
+    projectOverrides.map((o) => [o.repo.toLowerCase(), o]),
+  );
+
+  const merged: LibraryProject[] = [];
+
+  for (const project of projects) {
+    const override = overridesByRepo.get(project.fullName.toLowerCase());
+    if (override?.hide) continue;
+
+    const tagsSet = new Set<string>();
+    if (project.language) tagsSet.add(project.language);
+    for (const topic of project.topics) tagsSet.add(topic);
+    if (override?.tags) {
+      for (const t of override.tags) tagsSet.add(t);
+    }
+
+    merged.push({
+      ...project,
+      slug: override?.slug ?? project.name,
+      featured: override?.featured,
+      priority: override?.priority,
+      hidden: override?.hide,
+      summary: override?.summary,
+      tags: Array.from(tagsSet),
+    });
+  }
+
+  return merged;
 }

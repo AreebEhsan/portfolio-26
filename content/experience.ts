@@ -19,7 +19,7 @@ export const timeline: TimelineItem[] = [
     end: "May 2026",
     type: "education",
     highlights: [
-      "GPA: 3.9 / 4.0",
+      "GPA: 3.93",
       "Data Science certificate with strong grounding in statistics and machine learning.",
       "Coursework spanning algorithms, systems, AI/ML, and security.",
     ],

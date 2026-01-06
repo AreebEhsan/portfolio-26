@@ -6,6 +6,17 @@ import { profile } from "@/content/profile";
 import { fadeInUp, staggerContainer } from "@/components/motion/variants";
 import { ArrowDownRight, FileDown } from "lucide-react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const HeroScene = dynamic(
+  () => import("@/components/three/HeroScene").then((m) => m.HeroScene),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="relative h-[260px] w-full md:h-[340px]" />
+    ),
+  },
+);
 
 const ROTATION_INTERVAL = 2600;
 
@@ -100,32 +111,7 @@ export function Hero() {
           transition={{ duration: 0.7, ease: [0.19, 0.7, 0.3, 1] }}
           className="relative"
         >
-          <div className="glass-panel relative overflow-hidden p-5">
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(56,189,248,0.3),transparent_55%),radial-gradient(circle_at_100%_0%,rgba(129,140,248,0.3),transparent_55%)] opacity-80" />
-            <div className="relative space-y-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-cyan-200">
-                Now / Focus
-              </p>
-              <p className="text-sm leading-6 text-zinc-200 md:text-[0.95rem]">
-                {profile.now}
-              </p>
-              <div className="mt-4 grid grid-cols-2 gap-3 text-[0.65rem] text-zinc-300">
-                {profile.quickFacts.slice(0, 4).map((fact) => (
-                  <div
-                    key={fact.label}
-                    className="rounded-xl border border-white/10 bg-black/30 p-3"
-                  >
-                    <p className="text-[0.65rem] uppercase tracking-[0.14em] text-zinc-500">
-                      {fact.label}
-                    </p>
-                    <p className="mt-1 text-[0.8rem] text-zinc-100">
-                      {fact.value}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <HeroScene />
         </motion.div>
       </div>
     </section>

@@ -6,6 +6,7 @@ import { profile } from "@/content/profile";
 import { cn } from "@/lib/utils";
 import { Github, Linkedin, Mail } from "lucide-react";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 function useActiveSection(sectionIds: string[]) {
   const [active, setActive] = useState<string>(sectionIds[0] ?? "hero");
@@ -39,9 +40,18 @@ function useActiveSection(sectionIds: string[]) {
 export function NavBar() {
   const sectionIds = siteConfig.nav.map((item) => item.id);
   const active = useActiveSection(sectionIds);
+  const pathname = usePathname();
+  const router = useRouter();
 
   const handleClick = (id: string) => (e: React.MouseEvent) => {
     e.preventDefault();
+
+    // If we are not on the homepage, navigate back and let the browser handle the hash scroll.
+    if (pathname !== "/") {
+      router.push(`/#${id}`);
+      return;
+    }
+
     const el = document.getElementById(id);
     if (!el) return;
     el.scrollIntoView({ behavior: "smooth", block: "start" });
