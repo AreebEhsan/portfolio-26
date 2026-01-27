@@ -86,10 +86,29 @@ export function Hero() {
             </button>
             <Link
               href={profile.resumeUrl}
-              className="focus-ring inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/40 px-4 py-2.5 text-sm text-zinc-200 transition hover:border-cyan-400/60 hover:text-cyan-200"
+              className="focus-ring group relative inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/40 px-4 py-2.5 text-sm text-zinc-200 transition hover:border-cyan-400/60 hover:text-cyan-200"
             >
-              <FileDown className="h-4 w-4" />
-              Download resume
+              <div className="relative flex items-center gap-2">
+                <FileDown className="h-4 w-4" />
+                <span>Download resume</span>
+                <div className="mail-icon">
+                  <div className="animated-mail">
+                    <div className="back-fold" />
+                    <div className="letter">
+                      <div className="letter-border" />
+                      <div className="letter-title" />
+                      <div className="letter-context" />
+                      <div className="letter-stamp">
+                        <div className="letter-stamp-inner" />
+                      </div>
+                    </div>
+                    <div className="top-fold" />
+                    <div className="body" />
+                    <div className="left-fold" />
+                  </div>
+                  <div className="shadow" />
+                </div>
+              </div>
             </Link>
           </motion.div>
         </motion.div>

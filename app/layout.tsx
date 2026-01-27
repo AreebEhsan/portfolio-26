@@ -38,6 +38,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased scroll-snap-y`}
       >
+        <div id="stars" />
+        <div id="stars2" />
+        <div id="stars3" />
         <AnalyticsShell>
           <NavBar />
           <CommandPalette />
