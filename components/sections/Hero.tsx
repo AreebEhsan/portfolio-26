@@ -6,6 +6,11 @@ import { profile } from "@/content/profile";
 import { fadeInUp, staggerContainer } from "@/components/motion/variants";
 import { ArrowDownRight, FileDown } from "lucide-react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const Hero3D = dynamic(() => import("@/components/hero/Hero3D"), {
+  ssr: false,
+});
 
 const ROTATION_INTERVAL = 2600;
 
@@ -65,6 +70,7 @@ export function Hero() {
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
               Available for internships & collaborations
             </span>
+
             {profile.location && (
               <span className="inline-flex items-center gap-2 rounded-full border border-white/5 bg-black/30 px-3 py-1">
                 <span className="h-1 w-1 rounded-full bg-zinc-500" />
@@ -84,6 +90,7 @@ export function Hero() {
               <ArrowDownRight className="h-4 w-4" />
               View projects
             </button>
+
             <Link
               href={profile.resumeUrl}
               className="focus-ring group relative inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/40 px-4 py-2.5 text-sm text-zinc-200 transition hover:border-cyan-400/60 hover:text-cyan-200"
@@ -91,6 +98,7 @@ export function Hero() {
               <div className="relative flex items-center gap-2">
                 <FileDown className="h-4 w-4" />
                 <span>Download resume</span>
+
                 <div className="mail-icon">
                   <div className="animated-mail">
                     <div className="back-fold" />
@@ -113,20 +121,15 @@ export function Hero() {
           </motion.div>
         </motion.div>
 
+        {/* Floating 3D cube */}
         <motion.div
           initial={{ opacity: 0, scale: 0.96, y: 18 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.19, 0.7, 0.3, 1] }}
           className="relative"
         >
-          <div className="relative h-[260px] w-full overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-cyan-500/20 via-sky-500/10 to-indigo-500/20 shadow-[0_0_50px_rgba(56,189,248,0.35)] md:h-[340px]">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(34,211,238,0.35),_transparent_55%),radial-gradient(circle_at_bottom,_rgba(129,140,248,0.3),_transparent_55%)]" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <p className="px-6 text-center text-xs font-medium uppercase tracking-[0.25em] text-cyan-100/70">
-                Building for the web, one pixel at a time
-              </p>
-            </div>
-          </div>
+          {/* <div className="pointer-events-none absolute -inset-10 rounded-[2.5rem] bg-[radial-gradient(circle_at_30%_20%,_rgba(34,211,238,0.22),_transparent_55%),radial-gradient(circle_at_70%_80%,_rgba(129,140,248,0.18),_transparent_60%)] blur-2xl" /> */}
+          <Hero3D />
         </motion.div>
       </div>
     </section>

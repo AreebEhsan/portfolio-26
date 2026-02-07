@@ -47,7 +47,7 @@ body {
   min-height: 100vh;
   margin: 0;
   overflow-x: hidden;
-  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+  background: radial-gradient(ellipse at bottom, #000000 0%, #000000 100%);
   color: var(--fg);
   font-family: var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont,
     "SF Pro Text", sans-serif;
@@ -95,6 +95,52 @@ body {
     transform: translateY(-50%);
   }
 }
+
+/* Particles.js container and stats */
+canvas {
+  display: block;
+  vertical-align: bottom;
+}
+
+#particles-js{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50% 50%;
+  z-index: 0;
+}
+
+/* Ensure site content sits above the particles background */
+.site-content {
+  position: relative;
+  z-index: 1;
+}
+
+.count-particles{
+  background: rgba(0, 0, 34, 0.9);
+  position: absolute;
+  top: 48px;
+  left: 0;
+  width: 80px;
+  color: #13E8E9;
+  font-size: .8em;
+  text-align: left;
+  text-indent: 4px;
+  line-height: 14px;
+  padding-bottom: 2px;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  z-index: 9999;
+}
+.js-count-particles{ font-size: 1.1em; }
+#stats, .count-particles{ -webkit-user-select: none; margin-top: 5px; margin-left: 5px; }
+#stats{ border-radius: 3px 3px 0 0; overflow: hidden; }
+.count-particles{ border-radius: 0 0 3px 3px; }
 
 /* Mail hover animation for Download resume */
 .mail-icon {

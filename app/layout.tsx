@@ -5,6 +5,7 @@ import { siteConfig } from "@/content/siteConfig";
 import { NavBar } from "@/components/layout/NavBar";
 import { CommandPalette } from "@/components/layout/CommandPalette";
 import { AnalyticsShell } from "@/components/layout/AnalyticsShell";
+import Plexus from "@/components/particles/Plexus";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,14 +39,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased scroll-snap-y`}
       >
-        <div id="stars" />
-        <div id="stars2" />
-        <div id="stars3" />
-        <AnalyticsShell>
-          <NavBar />
-          <CommandPalette />
-          {children}
-        </AnalyticsShell>
+        <Plexus />
+        <div className="site-content">
+          <AnalyticsShell>
+            <NavBar />
+            <CommandPalette />
+            {children}
+          </AnalyticsShell>
+        </div>
       </body>
     </html>
   );
