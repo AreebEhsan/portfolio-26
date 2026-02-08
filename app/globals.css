@@ -298,7 +298,7 @@ a:hover {
   border-radius: var(--radius-lg);
   background: linear-gradient(
       135deg,
-      rgba(15, 23, 42, 0.9),
+      rgba(0, 0, 0, 0.9),
       rgba(15, 23, 42, 0.7)
     );
   border: 1px solid var(--border-subtle);
