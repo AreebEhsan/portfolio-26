@@ -82,7 +82,7 @@ export default function Plexus() {
     <>
       <div id="particles-js" />
       <div className="count-particles">
-        <span className="js-count-particles">--</span> particles
+     
       </div>
     </>
   );

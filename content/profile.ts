@@ -22,7 +22,7 @@ export const profile: Profile = {
   headline: "Engineer crafting practical AI systems and polished user experiences.",
   roles: ["Full-Stack Engineer", "AI/ML", "Cybersecurity", "Research"],
   subheadline:
-    "CS @ Georgia State (’26) focusing on RAG pipelines, agentic workflows, and production-style software.",
+    "MCS @ UIUC ('28) focusing on RAG pipelines, agentic workflows, and production-style software.",
   location: "Atlanta, GA, USA",
   quickFacts: [
     { label: "Education", value: "B.S. Computer Science, Georgia State University" },
