@@ -1,63 +1,23 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { certifications, type Certification } from "@/content/certifications";
 import { fadeInUp, staggerContainer, hoverLift } from "@/components/motion/variants";
 import { cn } from "@/lib/utils";
+import { useBackdropDismiss, useDialog } from "@/components/hooks/useDialog";
 import { ExternalLink, X } from "lucide-react";
 
 export function CertificationsSection() {
   const [active, setActive] = useState<Certification | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
-  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
-  // Focus trap + ESC to close
-  useEffect(() => {
-    if (!active) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        setActive(null);
-        return;
-      }
-
-      if (event.key === "Tab" && modalRef.current) {
-        const focusable = modalRef.current.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        );
-        if (focusable.length === 0) return;
-
-        const first = focusable[0]!;
-        const last = focusable[focusable.length - 1]!;
-        const current = document.activeElement as HTMLElement | null;
-
-        if (event.shiftKey) {
-          if (!current || current === first) {
-            event.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (!current || current === last) {
-            event.preventDefault();
-            first.focus();
-          }
-        }
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [active]);
-
-  // Focus the close button when the modal opens
-  useEffect(() => {
-    if (active && closeButtonRef.current) {
-      closeButtonRef.current.focus();
-    }
-  }, [active]);
+  const close = () => setActive(null);
+  const backdropProps = useBackdropDismiss(close);
+  // Escape, focus trap, focus restore and scroll lock now come from the shared
+  // dialog hook so all three modals on the site behave identically.
+  useDialog({ open: active !== null, onClose: close, containerRef: modalRef });
 
   return (
     <section id="certifications" className="section-shell section-spacing">
@@ -87,8 +47,8 @@ export function CertificationsSection() {
               type="button"
               layoutId={cert.id}
               className={cn(
-                "glass-panel group flex h-full flex-col items-stretch text-left",
-                "cursor-pointer overflow-hidden p-4 text-sm text-zinc-200 transition",
+                "glass-panel panel-interactive group flex h-full flex-col items-stretch text-left",
+                "cursor-pointer overflow-hidden p-4 text-sm text-zinc-200",
               )}
               initial="rest"
               animate="rest"
@@ -102,7 +62,8 @@ export function CertificationsSection() {
                   alt={cert.image.alt}
                   width={cert.image.width}
                   height={cert.image.height}
-                  className="h-32 w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                  sizes="(min-width: 1024px) 360px, (min-width: 768px) 50vw, 100vw"
+                  className="h-32 w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
                 />
               </div>
               <div className="mt-3 space-y-1">
@@ -132,28 +93,29 @@ export function CertificationsSection() {
       <AnimatePresence>
         {active && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 px-4 py-6 backdrop-blur"
+            className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/75 px-4 py-6 backdrop-blur"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            aria-modal="true"
-            role="dialog"
-            aria-label={active.name}
+            transition={{ duration: 0.18, ease: [0.22, 0.61, 0.36, 1] }}
+            {...backdropProps}
           >
             <motion.div
               ref={modalRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label={active.name}
               layoutId={active.id}
-              className="relative max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-2xl border border-white/10 bg-slate-950/95 p-4 md:p-6"
-              initial={{ opacity: 0, y: 16, scale: 0.96 }}
+              className="relative max-h-[90vh] w-full max-w-4xl overflow-y-auto overscroll-contain rounded-2xl border border-white/10 bg-slate-950/95 p-4 md:p-6"
+              initial={{ opacity: 0, y: 16, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 12, scale: 0.96 }}
-              transition={{ type: "spring", stiffness: 260, damping: 24 }}
+              exit={{ opacity: 0, y: 12, scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 300, damping: 28 }}
             >
               <button
-                ref={closeButtonRef}
                 type="button"
-                onClick={() => setActive(null)}
-                className="focus-ring absolute right-3 top-3 rounded-full border border-white/10 bg-black/70 p-1 text-zinc-400 hover:text-zinc-100"
+                onClick={close}
+                className="focus-ring absolute right-3 top-3 rounded-full border border-white/10 bg-black/70 p-1.5 text-zinc-400 transition-colors duration-200 hover:border-white/25 hover:text-zinc-100"
                 aria-label="Close certification details"
               >
                 <X className="h-4 w-4" />
@@ -180,6 +142,7 @@ export function CertificationsSection() {
                     alt={active.image.alt}
                     width={active.image.width}
                     height={active.image.height}
+                    sizes="(min-width: 1024px) 896px, 100vw"
                     className="h-auto max-h-[80vh] w-full object-contain"
                   />
                 </div>

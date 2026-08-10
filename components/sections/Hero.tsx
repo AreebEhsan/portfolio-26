@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { profile } from "@/content/profile";
 import { fadeInUp, staggerContainer } from "@/components/motion/variants";
 import { ArrowDownRight, FileDown } from "lucide-react";
@@ -10,9 +10,21 @@ import dynamic from "next/dynamic";
 
 const Hero3D = dynamic(() => import("@/components/hero/Hero3D"), {
   ssr: false,
+  // Reserve the canvas box up front so the hero doesn't jump when the 3D
+  // bundle finishes loading.
+  loading: () => <div className="h-[340px] w-full md:h-[520px]" />,
 });
 
 const ROTATION_INTERVAL = 2600;
+
+// Widest label decides the pill width, so rotating roles never resize it.
+const WIDEST_ROLE = profile.roles.reduce(
+  (longest, role) => (role.length > longest.length ? role : longest),
+  "",
+);
+
+const ROLE_PILL_CLASS =
+  "col-start-1 row-start-1 rounded-full bg-cyan-400/10 px-2.5 py-1 text-[0.7rem] uppercase tracking-[0.18em] text-cyan-200";
 
 export function Hero() {
   const [roleIndex, setRoleIndex] = useState(0);
@@ -47,10 +59,24 @@ export function Hero() {
             <p className="heading-subtle">Engineer with taste</p>
             <h1 className="heading-main">
               <span className="block text-zinc-200">{profile.name}</span>
-              <span className="mt-2 inline-flex items-center gap-2 text-lg text-cyan-300">
-                <span className="rounded-full bg-cyan-400/10 px-2.5 py-1 text-[0.7rem] uppercase tracking-[0.18em] text-cyan-200">
-                  {currentRole}
+              <span className="mt-3 inline-grid align-middle text-lg text-cyan-300">
+                {/* Invisible sizer holds the box; the visible label cross-fades
+                    inside it, so the rotation never nudges the layout. */}
+                <span aria-hidden className={`${ROLE_PILL_CLASS} invisible`}>
+                  {WIDEST_ROLE}
                 </span>
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.span
+                    key={currentRole}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.28, ease: [0.22, 0.61, 0.36, 1] }}
+                    className={`${ROLE_PILL_CLASS} grid place-items-center`}
+                  >
+                    {currentRole}
+                  </motion.span>
+                </AnimatePresence>
               </span>
             </h1>
           </motion.div>
@@ -85,15 +111,16 @@ export function Hero() {
           >
             <button
               onClick={handleScrollProjects}
-              className="focus-ring inline-flex items-center gap-2 rounded-full bg-cyan-500 px-5 py-2.5 text-sm font-medium text-slate-950 shadow-lg shadow-cyan-500/40 transition hover:bg-cyan-400"
+              className="focus-ring group inline-flex items-center gap-2 rounded-full bg-cyan-500 px-5 py-2.5 text-sm font-medium text-slate-950 shadow-lg shadow-cyan-500/30 transition-[background-color,box-shadow,transform] duration-200 ease-out hover:bg-cyan-400 hover:shadow-cyan-500/45 active:scale-[0.98]"
             >
-              <ArrowDownRight className="h-4 w-4" />
+              <ArrowDownRight className="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:translate-y-0.5" />
               View projects
             </button>
 
             <Link
               href={profile.resumeUrl}
-              className="focus-ring group relative inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/40 px-4 py-2.5 text-sm text-zinc-200 transition hover:border-cyan-400/60 hover:text-cyan-200"
+              download
+              className="focus-ring group relative inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/40 px-4 py-2.5 text-sm text-zinc-200 transition-[border-color,color,transform] duration-200 ease-out hover:border-cyan-400/60 hover:text-cyan-200 active:scale-[0.98]"
             >
               <div className="relative flex items-center gap-2">
                 <FileDown className="h-4 w-4" />

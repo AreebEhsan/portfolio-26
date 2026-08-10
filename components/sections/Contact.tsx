@@ -57,17 +57,22 @@ export function Contact() {
               <button
                 type="button"
                 onClick={handleCopy}
-                className="ml-1 inline-flex items-center gap-1 rounded-full bg-white/5 px-2 py-0.5 text-[0.65rem] text-zinc-200 focus-ring"
+                aria-label={`Copy email address ${emailAddress ?? ""}`}
+                className="ml-1 inline-flex shrink-0 items-center gap-1 rounded-full bg-white/5 px-2 py-0.5 text-[0.65rem] text-zinc-200 transition-colors duration-200 hover:bg-white/10 hover:text-cyan-200 focus-ring"
               >
                 <Copy className="h-3 w-3" />
-                {copied ? "Copied" : "Copy"}
+                {/* Fixed width: "Copy" → "Copied" would otherwise resize the
+                    button and nudge the whole row. */}
+                <span className="inline-block w-[3.1em] text-left">
+                  {copied ? "Copied" : "Copy"}
+                </span>
               </button>
             </div>
             <div className="flex items-center gap-3 text-xs text-zinc-400">
               {github && (
                 <Link
                   href={github.href}
-                  className="inline-flex items-center gap-1 text-zinc-300 hover:text-cyan-300 focus-ring"
+                  className="inline-flex items-center gap-1 rounded-full text-zinc-300 transition-colors duration-200 hover:text-cyan-300 focus-ring"
                 >
                   <Github className="h-3.5 w-3.5" /> GitHub
                 </Link>
@@ -75,7 +80,7 @@ export function Contact() {
               {linkedin && (
                 <Link
                   href={linkedin.href}
-                  className="inline-flex items-center gap-1 text-zinc-300 hover:text-cyan-300 focus-ring"
+                  className="inline-flex items-center gap-1 rounded-full text-zinc-300 transition-colors duration-200 hover:text-cyan-300 focus-ring"
                 >
                   <Linkedin className="h-3.5 w-3.5" /> LinkedIn
                 </Link>

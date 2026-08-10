@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { MergedProject } from "@/lib/projects";
 import { fadeInUp, staggerContainer } from "@/components/motion/variants";
 import { Github, ExternalLink, Star, GitFork, X, ArrowRight } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
+import { useBackdropDismiss, useDialog } from "@/components/hooks/useDialog";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -15,6 +16,11 @@ export type ProjectsSectionProps = {
 
 export function ProjectsSection({ projects }: ProjectsSectionProps) {
   const [selected, setSelected] = useState<MergedProject | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+
+  const close = () => setSelected(null);
+  const backdropProps = useBackdropDismiss(close);
+  useDialog({ open: selected !== null, onClose: close, containerRef: dialogRef });
 
   return (
     <section id="projects" className="section-shell section-spacing">
@@ -62,11 +68,12 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
               layoutId={project.slug}
               onClick={() => setSelected(project)}
               className={cn(
-                "glass-panel flex h-full flex-col items-stretch text-left",
-                "cursor-pointer p-4 text-sm text-zinc-200 transition",
+                "glass-panel panel-interactive group flex h-full flex-col items-stretch text-left",
+                "cursor-pointer p-4 text-sm text-zinc-200",
               )}
-              whileHover={{ y: -4, scale: 1.01 }}
-              transition={{ type: "spring", stiffness: 260, damping: 20 }}
+              whileHover={{ y: -4 }}
+              whileTap={{ y: -1 }}
+              transition={{ type: "spring", stiffness: 320, damping: 26 }}
             >
               <div className="flex items-start justify-between gap-2">
                 <div>
@@ -108,15 +115,17 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
                   ))}
                 </div>
               )}
-              <div className="mt-4 flex items-center justify-between text-[0.7rem] text-zinc-500">
+              {/* mt-auto pins this row to the card bottom so the meta line
+                  stays aligned across cards of differing description length. */}
+              <div className="mt-auto flex items-center justify-between gap-3 pt-4 text-[0.7rem] text-zinc-500">
                 {project.lastUpdated && (
                   <span>
                     Updated {formatDate(project.lastUpdated)}
                   </span>
                 )}
-                <span className="inline-flex items-center gap-1 text-cyan-300">
+                <span className="inline-flex items-center gap-1 text-cyan-300 transition-colors duration-200 group-hover:text-cyan-200">
                   View details
-                  <ExternalLink className="h-3 w-3" />
+                  <ArrowRight className="h-3 w-3 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
                 </span>
               </div>
             </motion.button>
@@ -127,22 +136,28 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
       <AnimatePresence>
         {selected && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-10 backdrop-blur"
+            className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/70 px-4 py-10 backdrop-blur"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.18, ease: [0.22, 0.61, 0.36, 1] }}
+            {...backdropProps}
           >
             <motion.div
+              ref={dialogRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label={selected.title}
               layoutId={selected.slug}
-              className="glass-panel relative max-h-[80vh] w-full max-w-3xl overflow-y-auto p-6 text-sm text-zinc-200"
-              initial={{ opacity: 0, y: 12, scale: 0.96 }}
+              className="glass-panel relative max-h-[85vh] w-full max-w-3xl overflow-y-auto overscroll-contain p-6 text-sm text-zinc-200"
+              initial={{ opacity: 0, y: 12, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 8, scale: 0.96 }}
-              transition={{ type: "spring", stiffness: 260, damping: 24 }}
+              exit={{ opacity: 0, y: 8, scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 300, damping: 28 }}
             >
               <button
-                onClick={() => setSelected(null)}
-                className="focus-ring absolute right-3 top-3 rounded-full border border-white/10 bg-black/60 p-1 text-zinc-400 hover:text-zinc-100"
+                onClick={close}
+                className="focus-ring absolute right-3 top-3 rounded-full border border-white/10 bg-black/60 p-1.5 text-zinc-400 transition-colors duration-200 hover:border-white/25 hover:text-zinc-100"
                 aria-label="Close project details"
               >
                 <X className="h-4 w-4" />
@@ -208,6 +223,7 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
                         alt={selected.screenshots[0]!.alt}
                         width={640}
                         height={360}
+                        sizes="(min-width: 768px) 320px, 100vw"
                         className="h-40 w-full object-cover"
                       />
                     </div>

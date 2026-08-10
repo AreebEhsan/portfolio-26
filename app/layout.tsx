@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/content/siteConfig";
@@ -27,6 +27,13 @@ export const metadata: Metadata = {
     images: [{ url: siteConfig.ogImage }],
   },
   metadataBase: new URL(siteConfig.url),
+};
+
+// Matches the mobile browser chrome to the page so there is no white flash
+// on load or bounce-scroll, and tells the UA to render form controls dark.
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({

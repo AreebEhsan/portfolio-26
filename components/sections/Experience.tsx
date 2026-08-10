@@ -26,12 +26,18 @@ export function Experience() {
         </motion.div>
 
         <motion.ol
-          variants={fadeInUp}
-          className="relative border-l border-white/10 pl-5 text-sm md:pl-6"
+          variants={staggerContainer}
+          className="relative border-l border-white/10 pl-6 text-sm md:pl-7"
         >
           {timeline.map((item) => (
-            <li key={item.id} className="relative mb-8 last:mb-0">
-              <div className="absolute -left-[10px] mt-1 h-2.5 w-2.5 rounded-full border border-cyan-300 bg-slate-950" />
+            <motion.li
+              key={item.id}
+              variants={fadeInUp}
+              className="relative mb-8 last:mb-0"
+            >
+              {/* Offset = list padding + half the dot, so the marker sits
+                  centred on the rail instead of floating beside it. */}
+              <div className="absolute -left-[calc(1.5rem+5px)] mt-1 h-2.5 w-2.5 rounded-full border border-cyan-300 bg-slate-950 md:-left-[calc(1.75rem+5px)]" />
               <div className="space-y-1">
                 <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">
                   {item.type === "education" ? "Education" : "Experience"}
@@ -48,7 +54,7 @@ export function Experience() {
                   ))}
                 </ul>
               </div>
-            </li>
+            </motion.li>
           ))}
         </motion.ol>
 
@@ -58,7 +64,7 @@ export function Experience() {
             {achievements.map((award) => (
               <div
                 key={award.id}
-                className="glass-panel h-full p-4 text-sm text-zinc-100"
+                className="glass-panel h-full p-4 text-sm text-zinc-100 transition-colors duration-300 hover:border-cyan-400/25"
               >
                 <p className="text-xs font-medium uppercase tracking-[0.18em] text-cyan-200">
                   {award.title}
