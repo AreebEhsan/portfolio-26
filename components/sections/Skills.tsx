@@ -33,6 +33,7 @@ export function Skills() {
               <button
                 key={f.id}
                 onClick={() => setFilter(f.id)}
+                aria-pressed={filter === f.id}
                 className={cn(
                   "chip focus-ring",
                   filter === f.id && "chip-active text-cyan-200",
@@ -61,8 +62,8 @@ export function Skills() {
                     <span
                       key={skill.name}
                       className={cn(
-                        "chip text-[0.7rem] text-zinc-200 transition-opacity",
-                        !active && "opacity-30",
+                        "chip text-[0.7rem] text-zinc-200",
+                        !active && "opacity-25",
                       )}
                     >
                       {skill.name}

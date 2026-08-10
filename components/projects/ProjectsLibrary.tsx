@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { LibraryProject } from "@/lib/projects";
 import { fadeInUp, staggerContainer, hoverLift } from "@/components/motion/variants";
 import { cn, formatDate } from "@/lib/utils";
+import { useBackdropDismiss, useDialog } from "@/components/hooks/useDialog";
 import { ExternalLink, Github, Star, GitFork, X, Filter } from "lucide-react";
 
 export type ProjectsLibraryProps = {
@@ -20,6 +21,11 @@ export function ProjectsLibrary({ projects }: ProjectsLibraryProps) {
   const [sortBy, setSortBy] = useState<SortOption>("curated");
   const [showArchived, setShowArchived] = useState(false);
   const [selected, setSelected] = useState<LibraryProject | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+
+  const close = () => setSelected(null);
+  const backdropProps = useBackdropDismiss(close);
+  useDialog({ open: selected !== null, onClose: close, containerRef: dialogRef });
 
   const languages = useMemo(() => {
     const set = new Set<string>();
@@ -66,7 +72,7 @@ export function ProjectsLibrary({ projects }: ProjectsLibraryProps) {
           <p className="heading-subtle">Projects Library</p>
           <h1 className="heading-main">Explore all GitHub projects.</h1>
           <p className="max-w-2xl text-sm leading-6 text-zinc-400">
-            A searchable library of everything I&apos;ve shipped publiclyfrom small
+            A searchable library of everything I&apos;ve shipped publicly—from small
             experiments to production-style systems.
           </p>
         </motion.div>
@@ -98,7 +104,7 @@ export function ProjectsLibrary({ projects }: ProjectsLibraryProps) {
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-1.5 text-xs text-zinc-100 focus:outline-none focus:ring-2 focus:ring-cyan-500/70"
+                className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-1.5 text-xs text-zinc-100 transition-colors duration-200 hover:border-white/20 focus:outline-none focus:ring-2 focus:ring-cyan-500/70 [&>option]:bg-slate-950 [&>option]:text-zinc-100"
               >
                 <option value="all">All</option>
                 {languages.map((lang) => (
@@ -116,7 +122,7 @@ export function ProjectsLibrary({ projects }: ProjectsLibraryProps) {
               <select
                 value={tag}
                 onChange={(e) => setTag(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-1.5 text-xs text-zinc-100 focus:outline-none focus:ring-2 focus:ring-cyan-500/70"
+                className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-1.5 text-xs text-zinc-100 transition-colors duration-200 hover:border-white/20 focus:outline-none focus:ring-2 focus:ring-cyan-500/70 [&>option]:bg-slate-950 [&>option]:text-zinc-100"
               >
                 <option value="all">All</option>
                 {tags.map((t) => (
@@ -134,7 +140,7 @@ export function ProjectsLibrary({ projects }: ProjectsLibraryProps) {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-1.5 text-xs text-zinc-100 focus:outline-none focus:ring-2 focus:ring-cyan-500/70"
+                className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-1.5 text-xs text-zinc-100 transition-colors duration-200 hover:border-white/20 focus:outline-none focus:ring-2 focus:ring-cyan-500/70 [&>option]:bg-slate-950 [&>option]:text-zinc-100"
               >
                 <option value="curated">Featured & popularity</option>
                 <option value="stars">Most starred</option>
@@ -161,10 +167,14 @@ export function ProjectsLibrary({ projects }: ProjectsLibraryProps) {
           </div>
         </motion.div>
 
-        <motion.div
-          variants={fadeInUp}
-          className="min-h-[200px]"
-        >
+        <motion.div variants={fadeInUp} className="min-h-[200px] space-y-4">
+          <p
+            className="text-[0.7rem] uppercase tracking-[0.18em] text-zinc-500"
+            aria-live="polite"
+          >
+            {filtered.length} of {projects.length}{" "}
+            {projects.length === 1 ? "project" : "projects"}
+          </p>
           {filtered.length === 0 ? (
             <div className="glass-panel flex flex-col items-center justify-center gap-2 p-8 text-sm text-zinc-400">
               <p>No projects match your filters.</p>
@@ -180,8 +190,8 @@ export function ProjectsLibrary({ projects }: ProjectsLibraryProps) {
                   type="button"
                   layoutId={project.slug}
                   className={cn(
-                    "glass-panel flex h-full flex-col items-stretch text-left",
-                    "cursor-pointer p-4 text-sm text-zinc-200 transition",
+                    "glass-panel panel-interactive flex h-full flex-col items-stretch text-left",
+                    "cursor-pointer p-4 text-sm text-zinc-200",
                   )}
                   initial="rest"
                   animate="rest"
@@ -222,7 +232,7 @@ export function ProjectsLibrary({ projects }: ProjectsLibraryProps) {
                     {project.summary ?? project.description}
                   </p>
 
-                  <div className="mt-3 flex flex-wrap gap-1.5 text-[0.65rem] text-zinc-300">
+                  <div className="mt-auto flex flex-wrap gap-1.5 pt-3 text-[0.65rem] text-zinc-300">
                     {project.language && (
                       <span className="chip border-white/15 bg-black/40 px-2 py-0.5">
                         {project.language}
@@ -247,22 +257,28 @@ export function ProjectsLibrary({ projects }: ProjectsLibraryProps) {
       <AnimatePresence>
         {selected && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-10 backdrop-blur"
+            className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/70 px-4 py-10 backdrop-blur"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.18, ease: [0.22, 0.61, 0.36, 1] }}
+            {...backdropProps}
           >
             <motion.div
+              ref={dialogRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label={getDisplayTitle(selected)}
               layoutId={selected.slug}
-              className="glass-panel relative max-h-[80vh] w-full max-w-3xl overflow-y-auto p-6 text-sm text-zinc-200"
-              initial={{ opacity: 0, y: 12, scale: 0.96 }}
+              className="glass-panel relative max-h-[85vh] w-full max-w-3xl overflow-y-auto overscroll-contain p-6 text-sm text-zinc-200"
+              initial={{ opacity: 0, y: 12, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 8, scale: 0.96 }}
-              transition={{ type: "spring", stiffness: 260, damping: 24 }}
+              exit={{ opacity: 0, y: 8, scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 300, damping: 28 }}
             >
               <button
-                onClick={() => setSelected(null)}
-                className="focus-ring absolute right-3 top-3 rounded-full border border-white/10 bg-black/60 p-1 text-zinc-400 hover:text-zinc-100"
+                onClick={close}
+                className="focus-ring absolute right-3 top-3 rounded-full border border-white/10 bg-black/60 p-1.5 text-zinc-400 transition-colors duration-200 hover:border-white/25 hover:text-zinc-100"
                 aria-label="Close project details"
               >
                 <X className="h-4 w-4" />

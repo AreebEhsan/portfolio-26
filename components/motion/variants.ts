@@ -24,12 +24,15 @@ export const staggerContainer: Variants = {
   },
 };
 
+/**
+ * Transform-only lift. Shadow and border are handled by `.panel-interactive`
+ * in CSS — animating box-shadow per frame in JS forced a repaint on every
+ * tick, which showed up as stutter on hover across a grid of cards.
+ */
 export const hoverLift: Variants = {
-  rest: { y: 0, scale: 1, boxShadow: "0 18px 45px rgba(15,23,42,0.8)" },
+  rest: { y: 0 },
   hover: {
     y: -4,
-    scale: 1.02,
-    boxShadow: "0 22px 55px rgba(15,23,42,0.95)",
-    transition: { type: "spring", stiffness: 260, damping: 18 },
+    transition: { type: "spring", stiffness: 320, damping: 26 },
   },
 };

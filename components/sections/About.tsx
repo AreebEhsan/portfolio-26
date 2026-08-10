@@ -33,9 +33,9 @@ export function About() {
           {profile.quickFacts.map((fact) => (
             <div
               key={fact.label}
-              className="flex items-start justify-between gap-3 rounded-xl border border-white/5 bg-black/30 px-3 py-2.5 text-xs md:text-[0.8rem]"
+              className="flex items-start justify-between gap-4 rounded-xl border border-white/5 bg-black/30 px-3 py-2.5 text-xs transition-colors duration-300 hover:border-white/10 md:text-[0.8rem]"
             >
-              <span className="text-[0.7rem] uppercase tracking-[0.18em] text-zinc-500">
+              <span className="shrink-0 text-[0.7rem] uppercase tracking-[0.18em] text-zinc-500">
                 {fact.label}
               </span>
               <span className="text-right text-zinc-200">{fact.value}</span>
