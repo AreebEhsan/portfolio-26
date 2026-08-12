@@ -1,0 +1,65 @@
+.circular-gallery {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: grab;
+  /* The component decides per-gesture whether a touch belongs to it; letting
+     the browser own vertical panning keeps page scrolling intact on mobile. */
+  touch-action: pan-y;
+}
+
+.circular-gallery:active {
+  cursor: grabbing;
+}
+
+/*
+ * Soft edge.
+ *
+ * Without this the canvas bounding box is a hard rectangle: cards rotating out
+ * of the arc are sliced off against a straight line. The mask is applied to the
+ * canvas rather than to .circular-gallery on purpose — a mask clips everything
+ * it contains, including the focus ring, so masking the focusable container
+ * would silently swallow the keyboard focus indicator below.
+ *
+ * A single elliptical gradient, offset above centre, keeps the middle card and
+ * its top edge fully crisp while fading the left/right entrances and the lower
+ * corners where the bend carries cards downward. One property, so no
+ * mask-composite support questions.
+ */
+.circular-gallery canvas {
+  -webkit-mask-image: var(--gallery-edge-mask);
+  mask-image: var(--gallery-edge-mask);
+}
+
+.circular-gallery {
+  --gallery-edge-mask: radial-gradient(
+    ellipse 78% 110% at 50% 38%,
+    #000 0%,
+    #000 57%,
+    rgba(0, 0, 0, 0.55) 76%,
+    rgba(0, 0, 0, 0.18) 90%,
+    transparent 100%
+  );
+}
+
+/* Narrow viewports show fewer cards, so pull the fade in less aggressively —
+   otherwise the neighbouring cards vanish almost entirely. */
+@media (max-width: 639px) {
+  .circular-gallery {
+    --gallery-edge-mask: radial-gradient(
+      ellipse 92% 118% at 50% 40%,
+      #000 0%,
+      #000 64%,
+      rgba(0, 0, 0, 0.5) 84%,
+      transparent 100%
+    );
+  }
+}
+
+/* Matches the site's cyan focus treatment rather than the upstream white.
+   Lives on the unmasked container so it stays fully visible. */
+.circular-gallery:focus-visible {
+  outline: 2px solid var(--accent-strong, #22d3ee);
+  outline-offset: 4px;
+  border-radius: 0.75rem;
+}
